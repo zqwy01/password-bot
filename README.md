@@ -34,15 +34,6 @@
 
 /del [сервис] - удалить пароль по названию сервиса
 
-
-Как работать с облаком?
-| ssh -i Debian2-Q0GPyqK3.pem debian@89.208.229.255 - подключится к облаку при помощи SSH и ключа 
-| sudo -i - выполнять всё под root правами
-| docker compose up - если упал Tarantool БД
-| docker exec -i -t root-tarantool1-1 console - подключение к консоли Tarantool
-| 
-|
-
 **Как поднять локально базу?**
 
 Для этого необхоидимо установить Docker и Docker compose
