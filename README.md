@@ -5,7 +5,7 @@
 Серверная часть бота расположена в инфраструктуре VK Cloud
 Доступ по SSH к серверной части бота в сообщение.
 
-Технологии которые используются **Python + библоитека Telebot; Docker + Tarantool**
+Технологии которые используются **Python + библоитека Telebot; Docker compose + Tarantool + replicas**
 
 Исходный код Python лежит в репозитории.
 
@@ -21,8 +21,7 @@
 
 
 Что не реализовано и какие проблемы?
-- Вывод логина
-- Бот падает, поэтому чтобы его поднять нужно выполнить команду **[python Bot.py]**
+- Бот может упасть, поэтому его нужно поднимать, чтобы поднять **[python Bot.py]** в терминале.
 - Пользователь не имеет отдельное полноценное пространство для своих сервисов, но имеет отдельныое пространства для UUID. Соотвественно пользователь с другим UUID не сможет увидеть пароль сервиса другого UUID, но не сможет создать сервис с таким же названием сервиса.
 
 Команды и как они работают:
@@ -36,7 +35,74 @@
 /del [сервис] - удалить пароль по названию сервиса
 
 
-Как поднять бота из облака?
+Как работать с облаком?
 | ssh -i Debian2-Q0GPyqK3.pem debian@89.208.229.255 - подключится к облаку при помощи SSH и ключа 
-| sudo -i
+| sudo -i - выполнять всё под root правами
+| docker compose up - если упал Tarantool БД
+| docker exec -i -t root-tarantool1-1 console - подключение к консоли Tarantool
+| 
 |
+
+**Как поднять локально базу?**
+Установка Docker и Docker compose
+Используем этот compose
+```
+version: '2'
+
+services:
+  tarantool1:
+    image: tarantool/tarantool:1.10.2
+    environment:
+      TARANTOOL_REPLICATION: "tarantool1,tarantool2"
+    networks:
+      - mynet
+    ports:
+      - "3301:3301"
+
+  tarantool2:
+    image: tarantool/tarantool:1.10.2
+    environment:
+      TARANTOOL_REPLICATION: "tarantool1,tarantool2"
+    networks:
+      - mynet
+    ports:
+      - "3302:3301"
+
+networks:
+  mynet:
+    driver: bridge
+```
+
+Обращаемся в главной реплике
+```docker exec -i -t root-tarantool1-1 console```
+
+######
+Создаём базу
+######
+```
+data = box.schema.space.create('data')
+```
+```
+data:format({
+{name = 'id', type = 'unsigned'},
+{name = 'uuid', type = 'string'},
+{name = 'service_name', type = 'string'},
+{name = 'user_login', type = 'string'},
+{name = 'user_password', type = 'string'}
+})
+```
+```
+box.space.space-name:create_index('index-name')
+```
+```
+data:create_index('primary', {
+type = 'tree',
+parts = {'id'}
+})
+```
+```
+data:create_index('secondary', {
+type = 'tree',
+parts = {'service_name'}
+})
+```
