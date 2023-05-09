@@ -44,7 +44,8 @@
 |
 
 **Как поднять локально базу?**
-Установка Docker и Docker compose
+
+Для этого необхоидимо установить Docker и Docker compose
 Используем этот compose
 ```
 version: '2'
