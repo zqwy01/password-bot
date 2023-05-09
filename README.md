@@ -77,7 +77,7 @@ data = box.schema.space.create('data')
 ```
 data:format({
 {name = 'id', type = 'unsigned'},
-{name = 'uuid', type = 'string'},
+{name = 'uuid', type = 'unsigned'},
 {name = 'service_name', type = 'string'},
 {name = 'user_login', type = 'string'},
 {name = 'user_password', type = 'string'}
