@@ -5,7 +5,7 @@
 Серверная часть бота расположена в инфраструктуре VK Cloud
 Доступ по SSH к серверной части бота в сообщение.
 
-Технологии которые используются **Python + библоитека Telebot; Docker compose + Tarantool + replicas**
+Технологии которые используются **Python3.9 + библоитека Telebot; Docker compose + Tarantool с replicas**
 
 Исходный код Python лежит в репозитории.
 
