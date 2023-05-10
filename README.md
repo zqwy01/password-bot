@@ -64,7 +64,9 @@ networks:
   mynet:
     driver: bridge
 ```
-
+```
+docker compose up -d
+```
 Обращаемся в главной реплике
 ```docker exec -it root-tarantool1-1 console```
 
